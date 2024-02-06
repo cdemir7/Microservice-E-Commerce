@@ -8,6 +8,7 @@ import com.example.productservice.business.dto.responses.create.CreateProductRes
 import com.example.productservice.business.dto.responses.get.GetAllProductsResponse;
 import com.example.productservice.business.dto.responses.get.GetProductResponse;
 import com.example.productservice.business.dto.responses.update.UpdateProductResponse;
+import com.example.productservice.entities.Product;
 import com.example.productservice.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,22 +25,41 @@ public class ProductManager implements ProductService {
 
     @Override
     public List<GetAllProductsResponse> getAll() {
-        return null;
+        List<Product> products = repository.findAll();
+        List<GetAllProductsResponse> response = products
+                .stream()
+                .map(product -> mapper.map(product, GetAllProductsResponse.class))
+                .toList();
+
+        return response;
     }
 
     @Override
     public GetProductResponse getById(UUID id) {
-        return null;
+        Product product = repository.findById(id).orElseThrow();
+        GetProductResponse response = mapper.map(product, GetProductResponse.class);
+
+        return response;
     }
 
     @Override
     public CreateProductResponse add(CreateProductRequest request) {
-        return null;
+        Product product = mapper.map(request, Product.class);
+        product.setId(UUID.randomUUID());
+        Product createdProduct = repository.save(product);
+        CreateProductResponse response = mapper.map(createdProduct, CreateProductResponse.class);
+
+        return response;
     }
 
     @Override
     public UpdateProductResponse update(UUID id, UpdateProductRequest request) {
-        return null;
+        Product product = mapper.map(request, Product.class);
+        product.setId(id);
+        Product updatedProduct = repository.save(product);
+        UpdateProductResponse response = mapper.map(updatedProduct, UpdateProductResponse.class);
+
+        return response;
     }
 
     @Override
