@@ -8,6 +8,7 @@ import com.example.productservice.business.dto.responses.create.CreateProductRes
 import com.example.productservice.business.dto.responses.get.GetAllProductsResponse;
 import com.example.productservice.business.dto.responses.get.GetProductResponse;
 import com.example.productservice.business.dto.responses.update.UpdateProductResponse;
+import com.example.productservice.business.rules.ProductBusinessRules;
 import com.example.productservice.entities.Product;
 import com.example.productservice.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class ProductManager implements ProductService {
     private final ProductRepository repository;
     private final ModelMapper mapper;
+    private final ProductBusinessRules rules;
 
     @Override
     public List<GetAllProductsResponse> getAll() {
@@ -36,6 +38,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public GetProductResponse getById(UUID id) {
+        rules.checkIfCarExists(id);
         Product product = repository.findById(id).orElseThrow();
         GetProductResponse response = mapper.map(product, GetProductResponse.class);
 
@@ -54,6 +57,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public UpdateProductResponse update(UUID id, UpdateProductRequest request) {
+        rules.checkIfCarExists(id);
         Product product = mapper.map(request, Product.class);
         product.setId(id);
         Product updatedProduct = repository.save(product);
@@ -64,6 +68,7 @@ public class ProductManager implements ProductService {
 
     @Override
     public void delete(UUID id) {
+        rules.checkIfCarExists(id);
         repository.deleteById(id);
     }
 }
