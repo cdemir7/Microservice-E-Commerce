@@ -6,6 +6,7 @@ import com.example.cartservice.business.dto.requests.update.UpdateCartRequest;
 import com.example.cartservice.business.dto.responses.create.CreateCartResponse;
 import com.example.cartservice.business.dto.responses.get.GetAllCartsResponse;
 import com.example.cartservice.business.dto.responses.update.UpdateCartResponse;
+import com.example.cartservice.business.rules.CartBusinessRules;
 import com.example.cartservice.entities.Cart;
 import com.example.cartservice.repository.CartRepository;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class CartManager implements CartService {
     private final CartRepository repository;
     private final ModelMapper mapper;
+    private final CartBusinessRules rules;
 
     @Override
     public List<GetAllCartsResponse> getAll() {
@@ -34,6 +36,7 @@ public class CartManager implements CartService {
 
     @Override
     public CreateCartResponse add(CreateCartRequest request) {
+        rules.checkIfBuyQuantity(request.getBuyQuantity());
         Cart cart = mapper.map(request, Cart.class);
         cart.setId(UUID.randomUUID());
         Cart createdCart = repository.save(cart);
