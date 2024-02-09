@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="product-service" />
+        <module name="cart-service" />
         <module name="customer-service" />
         <module name="common-package" />
       </profile>
@@ -15,6 +16,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cart-service" options="-parameters" />
       <module name="common-package" options="-parameters" />
       <module name="customer-service" options="-parameters" />
       <module name="product-service" options="-parameters" />

@@ -10,4 +10,8 @@ public class Paths {
     public static class Customer{
         public static final String ServiceBasePackage = "com.example.customerservice";
     }
+
+    public static class Cart{
+        public static final String ServiceBasePackage = "com.example.cartservice";
+    }
 }
