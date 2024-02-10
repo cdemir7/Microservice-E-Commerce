@@ -14,4 +14,8 @@ public class Paths {
     public static class Cart{
         public static final String ServiceBasePackage = "com.example.cartservice";
     }
+
+    public static class Order{
+        public static final String ServiceBasePackage = "com.example.orderservice";
+    }
 }
