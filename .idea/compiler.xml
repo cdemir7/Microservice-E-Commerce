@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="product-service" />
         <module name="cart-service" />
+        <module name="filter-service" />
         <module name="order-service" />
         <module name="customer-service" />
         <module name="common-package" />
@@ -20,6 +21,7 @@
       <module name="cart-service" options="-parameters" />
       <module name="common-package" options="-parameters" />
       <module name="customer-service" options="-parameters" />
+      <module name="filter-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
     </option>
