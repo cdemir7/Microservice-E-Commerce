@@ -18,4 +18,8 @@ public class Paths {
     public static class Order{
         public static final String ServiceBasePackage = "com.example.orderservice";
     }
+
+    public static class Filter{
+        public static final String ServiceBasePackage = "com.example.filterservice";
+    }
 }
