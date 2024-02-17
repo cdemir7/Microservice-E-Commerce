@@ -17,10 +17,10 @@ import java.util.List;
 public class FilterController {
     private final FilterService service;
 
-    @PostConstruct
+    /*@PostConstruct
     public void createDb(){
         service.add(new Filter());
-    }
+    }*/
 
     @GetMapping
     List<GetAllFilterResponse> getAll(){
