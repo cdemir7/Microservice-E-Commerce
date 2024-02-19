@@ -10,4 +10,6 @@ public interface FilterService {
     List<GetAllFilterResponse> getAll();
     void add(Filter filter);
     void delete(UUID  id);
+    void deleteByProductId(UUID productId);
+    void updateByProductId(Filter filter);
 }

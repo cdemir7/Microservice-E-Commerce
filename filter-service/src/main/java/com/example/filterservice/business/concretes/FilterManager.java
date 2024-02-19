@@ -38,4 +38,14 @@ public class FilterManager implements FilterService {
     public void delete(UUID id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public void deleteByProductId(UUID productId) {
+        repository.deleteByProductId(productId);
+    }
+
+    @Override
+    public void updateByProductId(Filter filter) {
+
+    }
 }
