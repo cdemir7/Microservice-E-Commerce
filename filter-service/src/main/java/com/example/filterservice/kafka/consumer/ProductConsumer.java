@@ -43,9 +43,7 @@ public class ProductConsumer {
     )
     public void consume(ProductUpdatedEvent event){
         Filter filter = mapper.map(event, Filter.class);
-        filter.setProductId(event.getProductId());
-
-
+        service.update(filter);
         log.info("Product deleted event consume {}", event);
     }
 }

@@ -45,7 +45,9 @@ public class FilterManager implements FilterService {
     }
 
     @Override
-    public void updateByProductId(Filter filter) {
-
+    public void update(Filter filter) {
+        Filter filter1 = repository.findByProductId(filter.getProductId());
+        filter.setId(filter1.getId());
+        repository.save(filter);
     }
 }

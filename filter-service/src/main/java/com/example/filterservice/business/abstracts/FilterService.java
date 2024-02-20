@@ -11,5 +11,5 @@ public interface FilterService {
     void add(Filter filter);
     void delete(UUID  id);
     void deleteByProductId(UUID productId);
-    void updateByProductId(Filter filter);
+    void update(Filter filter);
 }
