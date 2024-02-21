@@ -1,6 +1,6 @@
 package com.example.productservice.business.rules;
 
-import com.example.commonpackage.utils.constants.Paths;
+import com.example.commonpackage.utils.exceptions.BusinessException;
 import com.example.productservice.entities.Product;
 import com.example.productservice.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -15,14 +15,14 @@ public class ProductBusinessRules {
 
     public void checkIfCarExists(UUID id){
         if (!repository.existsById(id)){
-            throw new RuntimeException("PRODUCT_NOT_EXISTS");
+            throw new BusinessException("PRODUCT_NOT_EXISTS");
         }
     }
 
     public void validProductQuantity(UUID id){
         Product product = repository.findById(id).orElseThrow();
         if (product.getQuantity() < 1){
-            throw new RuntimeException("OUT_OF_STOCK");
+            throw new BusinessException("OUT_OF_STOCK");
         }
     }
 }
