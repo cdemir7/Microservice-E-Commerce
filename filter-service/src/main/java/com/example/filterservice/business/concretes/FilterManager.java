@@ -30,7 +30,6 @@ public class FilterManager implements FilterService {
 
     @Override
     public void add(Filter filter) {
-        filter.setId(UUID.randomUUID());
         repository.save(filter);
     }
 
@@ -48,6 +47,14 @@ public class FilterManager implements FilterService {
     public void update(Filter filter) {
         Filter filter1 = repository.findByProductId(filter.getProductId());
         filter.setId(filter1.getId());
+        repository.save(filter);
+    }
+
+    @Override
+    public void calculateQuantity(UUID productId, int buyQuantity) {
+        Filter filter = repository.findByProductId(productId);
+        int newQuantity = filter.getQuantity() - buyQuantity;
+        filter.setQuantity(newQuantity);
         repository.save(filter);
     }
 }

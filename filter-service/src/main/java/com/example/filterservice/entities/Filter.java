@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Filter {
     @Id
-    private UUID id;
+    private String  id;
     private UUID productId;
     private String name;
     private String categoryName;

@@ -18,7 +18,6 @@ public class CreateCustomerRequest {
     private String customerName;
 
     @NotBlank
-    @Pattern(regexp = "^5\\\\d{10}$")
     @Length(min = 10, max = 10, message = "Telefon numarası 10 haneli olmalı ve 5 ile başlamalıdır.")
     private String phoneNumber;
 

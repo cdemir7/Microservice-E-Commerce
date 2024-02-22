@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllFilterResponse {
-    private UUID id;
+    private String id;
     private UUID productId;
     private String name;
     private String categoryName;

@@ -15,10 +15,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCartRequest {
-    @NotBlank
+    @NotNull
     private UUID productId;
 
-    @NotBlank
+    @NotNull
     private UUID customerId;
 
     @NotNull

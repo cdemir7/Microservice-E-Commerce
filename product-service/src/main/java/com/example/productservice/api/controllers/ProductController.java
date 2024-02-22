@@ -1,5 +1,6 @@
 package com.example.productservice.api.controllers;
 
+import com.example.commonpackage.utils.dto.CartProductQuantity;
 import com.example.productservice.business.abstracts.ProductService;
 import com.example.productservice.business.dto.requests.create.CreateProductRequest;
 import com.example.productservice.business.dto.requests.update.UpdateProductRequest;
@@ -46,5 +47,10 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable UUID id){
         service.delete(id);
+    }
+
+    @GetMapping("/check-product-buy-quantity/")
+    void checkIfProductBuyQuantity(@RequestParam UUID productId, @RequestParam int buyQuantity){
+        service.checkIfProductBuyQuantity(productId, buyQuantity);
     }
 }

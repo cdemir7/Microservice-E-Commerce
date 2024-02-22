@@ -4,6 +4,7 @@ import com.example.commonpackage.configuration.mapper.ModelMapperConfig;
 import com.example.commonpackage.events.product.ProductCreatedEvent;
 import com.example.commonpackage.events.product.ProductDeletedEvent;
 import com.example.commonpackage.events.product.ProductUpdatedEvent;
+import com.example.commonpackage.utils.dto.CartProductQuantity;
 import com.example.productservice.business.abstracts.ProductService;
 import com.example.productservice.business.dto.requests.create.CreateProductRequest;
 import com.example.productservice.business.dto.requests.update.UpdateProductRequest;
@@ -18,6 +19,8 @@ import com.example.productservice.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.swing.event.CaretEvent;
 import java.util.List;
@@ -86,5 +89,19 @@ public class ProductManager implements ProductService {
         rules.checkIfCarExists(id);
         repository.deleteById(id);
         producer.sendMessage(new ProductDeletedEvent(id));
+    }
+
+    @Override
+    public void checkIfProductBuyQuantity(UUID productId, int buyQuantity) {
+        rules.checkIfCarExists(productId);
+        rules.checkIfProductBuyQuantity(productId,buyQuantity);
+    }
+
+    @Override
+    public void calculateQuantity(UUID productId, int buyQuantity) {
+        Product product = repository.findById(productId).orElseThrow();
+        int newQuantity = product.getQuantity() - buyQuantity;
+        product.setQuantity(newQuantity);
+        repository.save(product);
     }
 }
