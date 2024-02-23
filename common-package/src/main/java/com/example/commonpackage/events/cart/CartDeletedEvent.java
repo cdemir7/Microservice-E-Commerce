@@ -12,8 +12,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartCreatedEvent implements Event {
+public class CartDeletedEvent implements Event {
     private UUID productId;
     private int buyQuantity;
 }
-

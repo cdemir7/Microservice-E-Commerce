@@ -11,6 +11,7 @@ import com.example.cartservice.business.rules.CartBusinessRules;
 import com.example.cartservice.entities.Cart;
 import com.example.cartservice.repository.CartRepository;
 import com.example.commonpackage.events.cart.CartCreatedEvent;
+import com.example.commonpackage.events.cart.CartDeletedEvent;
 import com.example.commonpackage.utils.kafka.producer.KafkaProducer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -67,11 +68,17 @@ public class CartManager implements CartService {
 
     @Override
     public void delete(UUID id) {
+        Cart cart = repository.findById(id).orElseThrow();
+        sendKafkaCartDeletedEvent(cart.getProductId(), cart);
         repository.deleteById(id);
     }
 
     //
     private void sendKafkaCartCreatedEvent(CreateCartRequest request) {
         producer.sendMessage(new CartCreatedEvent(request.getProductId(), request.getBuyQuantity()), "cart-created");
+    }
+
+    private void sendKafkaCartDeletedEvent(UUID productId, Cart cart) {
+        producer.sendMessage(new CartDeletedEvent(productId, cart.getBuyQuantity()), "cart-deleted");
     }
 }

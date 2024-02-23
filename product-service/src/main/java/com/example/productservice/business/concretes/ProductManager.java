@@ -95,9 +95,17 @@ public class ProductManager implements ProductService {
     }
 
     @Override
-    public void calculateQuantity(UUID productId, int buyQuantity) {
+    public void calculateQuantityDec(UUID productId, int buyQuantity) {
         Product product = repository.findById(productId).orElseThrow();
         int newQuantity = product.getQuantity() - buyQuantity;
+        product.setQuantity(newQuantity);
+        repository.save(product);
+    }
+
+    @Override
+    public void calculateQuantityInc(UUID productId, int buyQuantity) {
+        Product product = repository.findById(productId).orElseThrow();
+        int newQuantity = product.getQuantity() + buyQuantity;
         product.setQuantity(newQuantity);
         repository.save(product);
     }

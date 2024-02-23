@@ -20,5 +20,6 @@ public interface ProductService {
     UpdateProductResponse update(UUID id, UpdateProductRequest request);
     void delete(UUID id);
     void checkIfProductBuyQuantity(UUID productId, int buyQuantity);
-    void calculateQuantity(UUID productId, int buyQuantity);
+    void calculateQuantityInc(UUID productId, int buyQuantity);
+    void calculateQuantityDec(UUID productId, int buyQuantity);
 }

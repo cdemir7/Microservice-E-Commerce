@@ -12,5 +12,6 @@ public interface FilterService {
     void delete(UUID  id);
     void deleteByProductId(UUID productId);
     void update(Filter filter);
-    void calculateQuantity(UUID productId, int buyQuantity);
+    void calculateQuantityInc(UUID productId, int buyQuantity);
+    void calculateQuantityDec(UUID productId, int buyQuantity);
 }

@@ -51,9 +51,17 @@ public class FilterManager implements FilterService {
     }
 
     @Override
-    public void calculateQuantity(UUID productId, int buyQuantity) {
+    public void calculateQuantityDec(UUID productId, int buyQuantity) {
         Filter filter = repository.findByProductId(productId);
         int newQuantity = filter.getQuantity() - buyQuantity;
+        filter.setQuantity(newQuantity);
+        repository.save(filter);
+    }
+
+    @Override
+    public void calculateQuantityInc(UUID productId, int buyQuantity) {
+        Filter filter = repository.findByProductId(productId);
+        int newQuantity = filter.getQuantity() + buyQuantity;
         filter.setQuantity(newQuantity);
         repository.save(filter);
     }
