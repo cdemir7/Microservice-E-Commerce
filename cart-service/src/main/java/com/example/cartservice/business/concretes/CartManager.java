@@ -7,11 +7,11 @@ import com.example.cartservice.business.dto.requests.update.UpdateCartRequest;
 import com.example.cartservice.business.dto.responses.create.CreateCartResponse;
 import com.example.cartservice.business.dto.responses.get.GetAllCartsResponse;
 import com.example.cartservice.business.dto.responses.update.UpdateCartResponse;
-import com.example.cartservice.business.kafka.producer.CartProducer;
 import com.example.cartservice.business.rules.CartBusinessRules;
 import com.example.cartservice.entities.Cart;
 import com.example.cartservice.repository.CartRepository;
 import com.example.commonpackage.events.cart.CartCreatedEvent;
+import com.example.commonpackage.utils.kafka.producer.KafkaProducer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class CartManager implements CartService {
     private final ModelMapper mapper;
     private final CartBusinessRules rules;
     private final ProductClient productClient;
-    private final CartProducer producer;
+    private final KafkaProducer producer;
 
     @Override
     public List<GetAllCartsResponse> getAll() {
@@ -49,7 +49,7 @@ public class CartManager implements CartService {
         cart.setCustomerId(request.getCustomerId());
         cart.setBuyQuantity(request.getBuyQuantity());
         Cart createdCart = repository.save(cart);
-        producer.sendMessage(new CartCreatedEvent(request.getProductId(), request.getBuyQuantity()));
+        sendKafkaCartCreatedEvent(request);
         CreateCartResponse response = mapper.map(createdCart, CreateCartResponse.class);
 
         return response;
@@ -68,5 +68,10 @@ public class CartManager implements CartService {
     @Override
     public void delete(UUID id) {
         repository.deleteById(id);
+    }
+
+    //
+    private void sendKafkaCartCreatedEvent(CreateCartRequest request) {
+        producer.sendMessage(new CartCreatedEvent(request.getProductId(), request.getBuyQuantity()), "cart-created");
     }
 }
