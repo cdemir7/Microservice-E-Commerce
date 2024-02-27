@@ -1,13 +1,10 @@
 package com.example.productservice.business.rules;
 
-import com.example.commonpackage.utils.dto.CartProductQuantity;
 import com.example.commonpackage.utils.exceptions.BusinessException;
 import com.example.productservice.entities.Product;
 import com.example.productservice.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.UUID;
 

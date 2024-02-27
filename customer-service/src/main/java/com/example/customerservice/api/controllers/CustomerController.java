@@ -1,5 +1,6 @@
 package com.example.customerservice.api.controllers;
 
+import com.example.commonpackage.utils.dto.ClientResponse;
 import com.example.customerservice.business.abstracts.CustomerService;
 import com.example.customerservice.business.dto.requests.create.CreateCustomerRequest;
 import com.example.customerservice.business.dto.requests.update.UpdateCustomerRequest;
@@ -43,8 +44,13 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable UUID id){
         service.delete(id);
     }
 
+    @GetMapping("/check-if-exists-customer/{id}")
+    ClientResponse checkIfExistsCustomer(@PathVariable UUID id){
+        return service.checkIfExistsCustomer(id);
+    }
 }

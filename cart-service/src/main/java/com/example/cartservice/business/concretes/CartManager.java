@@ -41,6 +41,7 @@ public class CartManager implements CartService {
 
     @Override
     public CreateCartResponse add(CreateCartRequest request) {
+        rules.checkIfExistsCustomer(request.getCustomerId());
         rules.checkIfBuyQuantity(request.getBuyQuantity());
         rules.ensureProductQuantity(request.getProductId(), request.getBuyQuantity());
         Cart cart = new Cart();

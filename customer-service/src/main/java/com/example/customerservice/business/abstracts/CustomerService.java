@@ -1,5 +1,6 @@
 package com.example.customerservice.business.abstracts;
 
+import com.example.commonpackage.utils.dto.ClientResponse;
 import com.example.customerservice.business.dto.requests.create.CreateCustomerRequest;
 import com.example.customerservice.business.dto.requests.update.UpdateCustomerRequest;
 import com.example.customerservice.business.dto.responses.create.CreateCustomerResponse;
@@ -16,4 +17,5 @@ public interface CustomerService {
     CreateCustomerResponse add(CreateCustomerRequest request);
     UpdateCustomerResponse update(UUID id, UpdateCustomerRequest request);
     void delete(UUID id);
+    ClientResponse checkIfExistsCustomer(UUID customerId);
 }

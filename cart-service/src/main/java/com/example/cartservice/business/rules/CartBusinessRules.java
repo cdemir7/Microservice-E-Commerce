@@ -1,5 +1,6 @@
 package com.example.cartservice.business.rules;
 
+import com.example.cartservice.api.clients.CustomerClient;
 import com.example.cartservice.api.clients.ProductClient;
 import com.example.cartservice.business.dto.requests.create.CreateCartRequest;
 import com.example.cartservice.entities.Cart;
@@ -15,7 +16,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CartBusinessRules {
     private final CartRepository repository;
-    private final ProductClient client;
+    private final ProductClient productClient;
+    private final CustomerClient customerClient;
 
     public void checkIfBuyQuantity(int buyQuantity){
         if (buyQuantity < 1){
@@ -24,7 +26,14 @@ public class CartBusinessRules {
     }
 
     public void ensureProductQuantity(UUID productId, int buyQuantity){
-        ClientResponse response = client.checkIfProductBuyQuantity(productId, buyQuantity);
+        ClientResponse response = productClient.checkIfProductBuyQuantity(productId, buyQuantity);
+        if (!response.isSuccess()){
+            throw new BusinessException(response.getMessage());
+        }
+    }
+
+    public void checkIfExistsCustomer(UUID customerId){
+        ClientResponse response = customerClient.checkIfExistsCustomer(customerId);
         if (!response.isSuccess()){
             throw new BusinessException(response.getMessage());
         }

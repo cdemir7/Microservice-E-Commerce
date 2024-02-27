@@ -1,5 +1,7 @@
 package com.example.customerservice.business.concretes;
 
+import com.example.commonpackage.utils.dto.ClientResponse;
+import com.example.commonpackage.utils.exceptions.BusinessException;
 import com.example.customerservice.business.abstracts.CustomerService;
 import com.example.customerservice.business.dto.requests.create.CreateCustomerRequest;
 import com.example.customerservice.business.dto.requests.update.UpdateCustomerRequest;
@@ -7,6 +9,7 @@ import com.example.customerservice.business.dto.responses.create.CreateCustomerR
 import com.example.customerservice.business.dto.responses.get.GetAllCustomersResponse;
 import com.example.customerservice.business.dto.responses.get.GetCustomerResponse;
 import com.example.customerservice.business.dto.responses.update.UpdateCustomerResponse;
+import com.example.customerservice.business.rules.CustomerBusinessRules;
 import com.example.customerservice.entities.Customer;
 import com.example.customerservice.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class CustomerManager implements CustomerService {
     private final CustomerRepository repository;
     private final ModelMapper mapper;
+    private final CustomerBusinessRules rules;
 
     @Override
     public List<GetAllCustomersResponse> getAll() {
@@ -64,5 +68,23 @@ public class CustomerManager implements CustomerService {
     @Override
     public void delete(UUID id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public ClientResponse checkIfExistsCustomer(UUID customerId) {
+        ClientResponse response = new ClientResponse();
+        validateCustomer(customerId, response);
+
+        return response;
+    }
+
+    private void validateCustomer(UUID customerId, ClientResponse response) {
+        try {
+            rules.checkIfExistsCustomer(customerId);
+            response.setSuccess(true);
+        }catch (BusinessException exception){
+            response.setSuccess(false);
+            response.setMessage(exception.getMessage());
+        }
     }
 }
