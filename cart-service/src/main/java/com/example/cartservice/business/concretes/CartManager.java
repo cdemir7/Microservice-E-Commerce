@@ -26,7 +26,6 @@ public class CartManager implements CartService {
     private final CartRepository repository;
     private final ModelMapper mapper;
     private final CartBusinessRules rules;
-    private final ProductClient productClient;
     private final KafkaProducer producer;
 
     @Override
@@ -43,7 +42,7 @@ public class CartManager implements CartService {
     @Override
     public CreateCartResponse add(CreateCartRequest request) {
         rules.checkIfBuyQuantity(request.getBuyQuantity());
-        productClient.checkIfProductBuyQuantity(request.getProductId(), request.getBuyQuantity());
+        rules.ensureProductQuantity(request.getProductId(), request.getBuyQuantity());
         Cart cart = new Cart();
         cart.setId(UUID.randomUUID());
         cart.setProductId(request.getProductId());

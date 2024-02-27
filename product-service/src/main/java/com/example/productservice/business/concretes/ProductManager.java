@@ -1,10 +1,10 @@
 package com.example.productservice.business.concretes;
 
-import com.example.commonpackage.configuration.mapper.ModelMapperConfig;
 import com.example.commonpackage.events.product.ProductCreatedEvent;
 import com.example.commonpackage.events.product.ProductDeletedEvent;
 import com.example.commonpackage.events.product.ProductUpdatedEvent;
-import com.example.commonpackage.utils.dto.CartProductQuantity;
+import com.example.commonpackage.utils.dto.ClientResponse;
+import com.example.commonpackage.utils.exceptions.BusinessException;
 import com.example.commonpackage.utils.kafka.producer.KafkaProducer;
 import com.example.productservice.business.abstracts.ProductService;
 import com.example.productservice.business.dto.requests.create.CreateProductRequest;
@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.swing.event.CaretEvent;
 import java.util.List;
 import java.util.UUID;
 
@@ -89,9 +88,11 @@ public class ProductManager implements ProductService {
     }
 
     @Override
-    public void checkIfProductBuyQuantity(UUID productId, int buyQuantity) {
-        rules.checkIfCarExists(productId);
-        rules.checkIfProductBuyQuantity(productId,buyQuantity);
+    public ClientResponse checkIfProductBuyQuantity(UUID productId, int buyQuantity) {
+        ClientResponse response = new ClientResponse();
+        validateProductQuantity(productId, buyQuantity, response);
+
+        return response;
     }
 
     @Override
@@ -125,5 +126,16 @@ public class ProductManager implements ProductService {
 
     private void sendKafkaProductDeletedEvent(UUID id) {
         producer.sendMessage(new ProductDeletedEvent(id), "product-deleted");
+    }
+
+    private void validateProductQuantity(UUID productId, int buyQuantity, ClientResponse response) {
+        try {
+            rules.checkIfCarExists(productId);
+            rules.checkIfProductBuyQuantity(productId, buyQuantity);
+            response.setSuccess(true);
+        }catch (BusinessException exception){
+            response.setSuccess(false);
+            response.setMessage(exception.getMessage());
+        }
     }
 }

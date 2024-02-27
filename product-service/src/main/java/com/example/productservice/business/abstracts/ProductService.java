@@ -1,6 +1,7 @@
 package com.example.productservice.business.abstracts;
 
 import com.example.commonpackage.utils.dto.CartProductQuantity;
+import com.example.commonpackage.utils.dto.ClientResponse;
 import com.example.productservice.business.dto.requests.create.CreateProductRequest;
 import com.example.productservice.business.dto.requests.update.UpdateProductRequest;
 import com.example.productservice.business.dto.responses.create.CreateProductResponse;
@@ -19,7 +20,7 @@ public interface ProductService {
     CreateProductResponse add(CreateProductRequest request);
     UpdateProductResponse update(UUID id, UpdateProductRequest request);
     void delete(UUID id);
-    void checkIfProductBuyQuantity(UUID productId, int buyQuantity);
+    ClientResponse checkIfProductBuyQuantity(UUID productId, int buyQuantity);
     void calculateQuantityInc(UUID productId, int buyQuantity);
     void calculateQuantityDec(UUID productId, int buyQuantity);
 }
