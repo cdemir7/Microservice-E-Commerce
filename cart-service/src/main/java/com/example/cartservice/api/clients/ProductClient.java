@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
-@FeignClient(name = "product")
+@FeignClient(name = "product", fallback = ProductClientFallback.class)
 public interface ProductClient {
     @GetMapping(value = "/api/products/check-product-buy-quantity/")
     ClientResponse checkIfProductBuyQuantity(@RequestParam UUID productId, @RequestParam int buyQuantity);
