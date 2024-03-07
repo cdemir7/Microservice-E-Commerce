@@ -8,6 +8,7 @@ import com.example.cartservice.business.dto.responses.create.CreateCartResponse;
 import com.example.cartservice.business.dto.responses.get.GetAllCartsResponse;
 import com.example.cartservice.business.dto.responses.update.UpdateCartResponse;
 import com.example.cartservice.business.rules.CartBusinessRules;
+import com.example.cartservice.entities.BuyProducts;
 import com.example.cartservice.entities.Cart;
 import com.example.cartservice.repository.CartRepository;
 import com.example.commonpackage.events.cart.CartCreatedEvent;
@@ -41,16 +42,17 @@ public class CartManager implements CartService {
 
     @Override
     public CreateCartResponse add(CreateCartRequest request) {
-        rules.checkIfExistsCustomer(request.getCustomerId());
-        rules.checkIfBuyQuantity(request.getBuyQuantity());
-        rules.ensureProductQuantity(request.getProductId(), request.getBuyQuantity());
+        //rules.checkIfExistsCustomer(request.getCustomerId());
+        //rules.checkIfExistsCustomer(request.getCustomerId());
+        //rules.checkIfBuyQuantity(request.getBuyProducts());
+        //rules.ensureProductQuantity(request.getProductId(), request.getBuyQuantity());
         Cart cart = new Cart();
+
         cart.setId(UUID.randomUUID());
-        cart.setProductId(request.getProductId());
         cart.setCustomerId(request.getCustomerId());
-        cart.setBuyQuantity(request.getBuyQuantity());
+        cart.setBuyProducts(request.getBuyProducts());
         Cart createdCart = repository.save(cart);
-        sendKafkaCartCreatedEvent(request);
+        //sendKafkaCartCreatedEvent(buyProducts);
         CreateCartResponse response = mapper.map(createdCart, CreateCartResponse.class);
 
         return response;
@@ -69,16 +71,17 @@ public class CartManager implements CartService {
     @Override
     public void delete(UUID id) {
         Cart cart = repository.findById(id).orElseThrow();
-        sendKafkaCartDeletedEvent(cart.getProductId(), cart);
+        BuyProducts buyProducts = cart.getBuyProducts().get(0);
+        sendKafkaCartDeletedEvent(buyProducts);
         repository.deleteById(id);
     }
 
     //
-    private void sendKafkaCartCreatedEvent(CreateCartRequest request) {
-        producer.sendMessage(new CartCreatedEvent(request.getProductId(), request.getBuyQuantity()), "cart-created");
+    private void sendKafkaCartCreatedEvent(BuyProducts buyProducts) {
+        producer.sendMessage(new CartCreatedEvent(buyProducts.getProductId(), buyProducts.getBuyQuantity()), "cart-created");
     }
 
-    private void sendKafkaCartDeletedEvent(UUID productId, Cart cart) {
-        producer.sendMessage(new CartDeletedEvent(productId, cart.getBuyQuantity()), "cart-deleted");
+    private void sendKafkaCartDeletedEvent(BuyProducts buyProducts) {
+        producer.sendMessage(new CartDeletedEvent(buyProducts.getProductId(), buyProducts.getBuyQuantity()), "cart-deleted");
     }
 }

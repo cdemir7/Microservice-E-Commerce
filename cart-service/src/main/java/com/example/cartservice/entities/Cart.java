@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +19,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID productId;
     private UUID customerId;
-    private int buyQuantity;
+    @ElementCollection
+    private List<BuyProducts> buyProducts;
 }

@@ -8,6 +8,7 @@ import com.example.cartservice.repository.CartRepository;
 import com.example.commonpackage.utils.dto.ClientResponse;
 import com.example.commonpackage.utils.exceptions.BusinessException;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;

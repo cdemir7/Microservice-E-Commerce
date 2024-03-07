@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Slf4j
-@Component
+@Component("customerClient")
 public class CustomerClientFallback implements CustomerClient{
     @Override
     public ClientResponse checkIfExistsCustomer(UUID id) {

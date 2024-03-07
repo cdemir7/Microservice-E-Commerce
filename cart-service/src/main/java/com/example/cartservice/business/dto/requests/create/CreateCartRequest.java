@@ -1,5 +1,6 @@
 package com.example.cartservice.business.dto.requests.create;
 
+import com.example.cartservice.entities.BuyProducts;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,13 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CreateCartRequest {
     @NotNull
-    private UUID productId;
-
-    @NotNull
     private UUID customerId;
 
-    @NotNull
-    @Min(1)
-    private int buyQuantity;
+    private List<BuyProducts> buyProducts;
 }
 
