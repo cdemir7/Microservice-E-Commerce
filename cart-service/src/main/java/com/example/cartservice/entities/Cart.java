@@ -20,6 +20,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private UUID customerId;
-    @ElementCollection
-    private List<BuyProducts> buyProducts;
+
+    @OneToOne(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private BuyProducts buyProducts;
 }

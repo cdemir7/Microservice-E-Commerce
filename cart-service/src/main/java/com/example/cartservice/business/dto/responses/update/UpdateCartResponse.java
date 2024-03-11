@@ -16,5 +16,6 @@ import java.util.UUID;
 public class UpdateCartResponse {
     private UUID id;
     private UUID customerId;
-    private List<BuyProducts> buyProducts;
+    private UUID productId;
+    private int buyQuantity;
 }

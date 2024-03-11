@@ -31,9 +31,10 @@ public class CartController {
         return service.add(request);
     }
 
-    @PutMapping("/{id}")
-    UpdateCartResponse update(@PathVariable UUID id, @Valid @RequestBody UpdateCartRequest request){
-        return service.update(id, request);
+    @PostMapping("/{customerId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    void createCart(@PathVariable UUID customerId){
+        service.createCart(customerId);
     }
 
     @DeleteMapping("/{id}")

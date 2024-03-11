@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,11 +47,11 @@ public class CartManager implements CartService {
         //rules.checkIfExistsCustomer(request.getCustomerId());
         //rules.checkIfBuyQuantity(request.getBuyProducts());
         //rules.ensureProductQuantity(request.getProductId(), request.getBuyQuantity());
-        Cart cart = new Cart();
+        Cart cart = repository.findByCustomerId(request.getCustomerId());
+        BuyProducts buyProducts = cart.getBuyProducts();
+        buyProducts.getProductId().add(request.getProductId());
+        buyProducts.getBuyQuantity().add(request.getBuyQuantity());
 
-        cart.setId(UUID.randomUUID());
-        cart.setCustomerId(request.getCustomerId());
-        cart.setBuyProducts(request.getBuyProducts());
         Cart createdCart = repository.save(cart);
         //sendKafkaCartCreatedEvent(buyProducts);
         CreateCartResponse response = mapper.map(createdCart, CreateCartResponse.class);
@@ -59,29 +60,35 @@ public class CartManager implements CartService {
     }
 
     @Override
-    public UpdateCartResponse update(UUID id, UpdateCartRequest request) {
-        Cart cart = mapper.map(request, Cart.class);
-        cart.setId(id);
-        Cart updatedCart = repository.save(cart);
-        UpdateCartResponse response = mapper.map(updatedCart, UpdateCartResponse.class);
-
-        return response;
+    public void delete(UUID id) {
+        Cart cart = repository.findByCustomerId(id);
+        //BuyProducts buyProducts = cart.getBuyProducts().get(0);
+        //sendKafkaCartDeletedEvent(buyProducts);
+        repository.deleteByCustomerId(id);
     }
 
     @Override
-    public void delete(UUID id) {
-        Cart cart = repository.findById(id).orElseThrow();
-        BuyProducts buyProducts = cart.getBuyProducts().get(0);
-        sendKafkaCartDeletedEvent(buyProducts);
-        repository.deleteById(id);
+    public void createCart(UUID customerId) {
+        Cart cart = new Cart();
+        cart.setId(UUID.randomUUID());
+        cart.setCustomerId(customerId);
+
+        BuyProducts buyProducts = new BuyProducts();
+        buyProducts.setId(UUID.randomUUID());
+        buyProducts.setCart(cart);
+        buyProducts.setProductId(new ArrayList<>());
+        buyProducts.setBuyQuantity(new ArrayList<>());
+
+        cart.setBuyProducts(buyProducts);
+        repository.save(cart);
     }
 
     //
     private void sendKafkaCartCreatedEvent(BuyProducts buyProducts) {
-        producer.sendMessage(new CartCreatedEvent(buyProducts.getProductId(), buyProducts.getBuyQuantity()), "cart-created");
+        //producer.sendMessage(new CartCreatedEvent(buyProducts.getProductId(), buyProducts.getBuyQuantity()), "cart-created");
     }
 
     private void sendKafkaCartDeletedEvent(BuyProducts buyProducts) {
-        producer.sendMessage(new CartDeletedEvent(buyProducts.getProductId(), buyProducts.getBuyQuantity()), "cart-deleted");
+        //producer.sendMessage(new CartDeletedEvent(buyProducts.getProductId(), buyProducts.getBuyQuantity()), "cart-deleted");
     }
 }

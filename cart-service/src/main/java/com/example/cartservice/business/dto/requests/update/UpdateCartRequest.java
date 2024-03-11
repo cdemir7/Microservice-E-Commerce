@@ -17,8 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateCartRequest {
-    @NotNull
     private UUID customerId;
-
-    private List<BuyProducts> buyProducts;
+    private UUID productId;
+    private int buyQuantity;
 }
