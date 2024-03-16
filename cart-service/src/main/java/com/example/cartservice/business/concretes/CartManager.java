@@ -1,19 +1,14 @@
 package com.example.cartservice.business.concretes;
 
-import com.example.cartservice.api.clients.ProductClient;
 import com.example.cartservice.business.abstracts.CartService;
 import com.example.cartservice.business.dto.requests.create.CreateCartRequest;
-import com.example.cartservice.business.dto.requests.update.UpdateCartRequest;
 import com.example.cartservice.business.dto.responses.create.CreateCartResponse;
 import com.example.cartservice.business.dto.responses.get.GetAllCartsResponse;
-import com.example.cartservice.business.dto.responses.update.UpdateCartResponse;
 import com.example.cartservice.business.rules.CartBusinessRules;
 import com.example.cartservice.entities.BuyProducts;
 import com.example.cartservice.entities.Cart;
 import com.example.cartservice.repository.BuyProductsRepository;
 import com.example.cartservice.repository.CartRepository;
-import com.example.commonpackage.events.cart.CartCreatedEvent;
-import com.example.commonpackage.events.cart.CartDeletedEvent;
 import com.example.commonpackage.utils.kafka.producer.KafkaProducer;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -66,6 +61,8 @@ public class CartManager implements CartService {
         CreateCartResponse response = new CreateCartResponse();
         response.setId(createdCart.getId());
         response.setCustomerId(createdCart.getCustomerId());
+        response.setBuyQuantity(buyProducts.getBuyQuantity());
+        response.setProductId(buyProducts.getProductId());
 
         return response;
     }
@@ -73,9 +70,9 @@ public class CartManager implements CartService {
     @Override
     public void delete(UUID id) {
         Cart cart = cartRepository.findByCustomerId(id);
-        //BuyProducts buyProducts = cart.getBuyProducts().get(0);
+        List<BuyProducts> buyProductsList = buyProductsRepository.findAll();
         //sendKafkaCartDeletedEvent(buyProducts);
-        cartRepository.deleteByCustomerId(id);
+
     }
 
     @Override
