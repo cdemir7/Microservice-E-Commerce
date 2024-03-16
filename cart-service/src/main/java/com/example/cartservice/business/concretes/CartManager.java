@@ -10,6 +10,7 @@ import com.example.cartservice.business.dto.responses.update.UpdateCartResponse;
 import com.example.cartservice.business.rules.CartBusinessRules;
 import com.example.cartservice.entities.BuyProducts;
 import com.example.cartservice.entities.Cart;
+import com.example.cartservice.repository.BuyProductsRepository;
 import com.example.cartservice.repository.CartRepository;
 import com.example.commonpackage.events.cart.CartCreatedEvent;
 import com.example.commonpackage.events.cart.CartDeletedEvent;
@@ -25,14 +26,15 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class CartManager implements CartService {
-    private final CartRepository repository;
+    private final CartRepository cartRepository;
+    private final BuyProductsRepository buyProductsRepository;
     private final ModelMapper mapper;
     private final CartBusinessRules rules;
     private final KafkaProducer producer;
 
     @Override
     public List<GetAllCartsResponse> getAll() {
-        List<Cart> carts = repository.findAll();
+        List<Cart> carts = cartRepository.findAll();
         List<GetAllCartsResponse> responses = carts
                 .stream()
                 .map(cart -> mapper.map(cart, GetAllCartsResponse.class))
@@ -47,24 +49,33 @@ public class CartManager implements CartService {
         //rules.checkIfExistsCustomer(request.getCustomerId());
         //rules.checkIfBuyQuantity(request.getBuyProducts());
         //rules.ensureProductQuantity(request.getProductId(), request.getBuyQuantity());
-        Cart cart = repository.findByCustomerId(request.getCustomerId());
-        BuyProducts buyProducts = cart.getBuyProducts();
-        buyProducts.getProductId().add(request.getProductId());
-        buyProducts.getBuyQuantity().add(request.getBuyQuantity());
 
-        Cart createdCart = repository.save(cart);
+        Cart cart = cartRepository.findByCustomerId(request.getCustomerId());
+        cart.setCustomerId(request.getCustomerId());
+
+
+        List<BuyProducts> buyProductsList = new ArrayList<>();
+        BuyProducts buyProducts = new BuyProducts(UUID.randomUUID(),request.getProductId(), request.getBuyQuantity(),cart);
+        buyProductsList.add(buyProducts);
+        buyProductsRepository.save(buyProducts);
+
+
+
+        Cart createdCart = cartRepository.save(cart);
         //sendKafkaCartCreatedEvent(buyProducts);
-        CreateCartResponse response = mapper.map(createdCart, CreateCartResponse.class);
+        CreateCartResponse response = new CreateCartResponse();
+        response.setId(createdCart.getId());
+        response.setCustomerId(createdCart.getCustomerId());
 
         return response;
     }
 
     @Override
     public void delete(UUID id) {
-        Cart cart = repository.findByCustomerId(id);
+        Cart cart = cartRepository.findByCustomerId(id);
         //BuyProducts buyProducts = cart.getBuyProducts().get(0);
         //sendKafkaCartDeletedEvent(buyProducts);
-        repository.deleteByCustomerId(id);
+        cartRepository.deleteByCustomerId(id);
     }
 
     @Override
@@ -72,15 +83,7 @@ public class CartManager implements CartService {
         Cart cart = new Cart();
         cart.setId(UUID.randomUUID());
         cart.setCustomerId(customerId);
-
-        BuyProducts buyProducts = new BuyProducts();
-        buyProducts.setId(UUID.randomUUID());
-        buyProducts.setCart(cart);
-        buyProducts.setProductId(new ArrayList<>());
-        buyProducts.setBuyQuantity(new ArrayList<>());
-
-        cart.setBuyProducts(buyProducts);
-        repository.save(cart);
+        cartRepository.save(cart);
     }
 
     //

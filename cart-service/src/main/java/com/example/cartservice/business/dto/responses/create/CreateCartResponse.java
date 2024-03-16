@@ -19,6 +19,8 @@ public class CreateCartResponse {
     private UUID customerId;
     private UUID productId;
     private int buyQuantity;
+
+
 }
 
 

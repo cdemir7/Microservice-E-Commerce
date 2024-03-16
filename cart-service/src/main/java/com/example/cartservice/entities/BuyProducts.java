@@ -1,5 +1,7 @@
 package com.example.cartservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,15 +22,12 @@ public class BuyProducts {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    @ElementCollection
-    private List<UUID> productId;
+    private UUID productId;
 
-    @Column(nullable = false)
-    @ElementCollection
-    private List<Integer> buyQuantity;
+    private int buyQuantity;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart;
 }
