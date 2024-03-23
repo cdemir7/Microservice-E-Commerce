@@ -26,8 +26,8 @@ public class BuyProducts {
 
     private int buyQuantity;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "cart_id")
-    @JsonBackReference
     private Cart cart;
 }

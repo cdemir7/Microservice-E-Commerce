@@ -39,7 +39,7 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(@PathVariable UUID id){
-        service.delete(id);
+    void delete(@RequestParam UUID id, @RequestParam UUID productId, @RequestParam int quantity){
+        service.delete(id, productId, quantity);
     }
 }

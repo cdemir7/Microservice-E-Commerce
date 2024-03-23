@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface CartService {
     List<GetAllCartsResponse> getAll();
     CreateCartResponse add(CreateCartRequest request);
-    void delete(UUID id);
+    void delete(UUID id, UUID productId, int quantity);
     void createCart(UUID customerId);
 }

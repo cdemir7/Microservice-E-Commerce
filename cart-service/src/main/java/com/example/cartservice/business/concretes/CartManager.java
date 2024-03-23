@@ -68,9 +68,10 @@ public class CartManager implements CartService {
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID id, UUID productId, int quantity) {
         Cart cart = cartRepository.findByCustomerId(id);
-        List<BuyProducts> buyProductsList = buyProductsRepository.findAll();
+        cart.getBuyProducts().removeIf(product -> product.getProductId().equals(productId) && product.getBuyQuantity() == quantity);
+        cartRepository.save(cart);
         //sendKafkaCartDeletedEvent(buyProducts);
 
     }

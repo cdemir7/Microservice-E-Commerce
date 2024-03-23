@@ -23,7 +23,7 @@ public class Cart {
     private UUID id;
     private UUID customerId;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<BuyProducts> buyProducts;
 }
